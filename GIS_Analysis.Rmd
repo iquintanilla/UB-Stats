@@ -1,0 +1,50 @@
+---
+title: "GIS Analysis R Notebook"
+output: html_notebook
+---
+
+
+#GIS Analysis
+
+#R Code
+
+##R Packages
+
+```{r}
+library(tidyverse)
+library(ggmap)
+library(maps)
+library(maptools)
+```
+
+
+##Loading Dataset
+
+```{r}
+orange_county <- map_data("county") %>%
+  filter(region=="california") %>%
+  filter(subregion=="orange")
+vaccine_orange_13<-read_csv(file="vaccine_rates") %>%
+  filter(County=="ORANGE") %>% filter(School_Year=="2013-2014")
+head(vaccine_orange_13)
+```
+
+##Creating Orange County Map
+```{r}
+orange_map<-ggplot(data=orange_county,aes(x=long,y=lat))+geom_polygon(color="black",fill="gray")+theme_bw()
+orange_map
+```
+
+
+
+##Adding Schools
+```{r}
+orange_map_schools<-orange_map+geom_point(data=vaccine_orange_13,aes(x=Longitude,y=Latitude,color=exemption))
+orange_map_schools
+```
+
+
+
+
+
+
