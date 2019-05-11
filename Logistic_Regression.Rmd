@@ -3,3 +3,59 @@ title: "Logistic Regression R Notebook"
 output: html_notebook
 ---
 
+#Logistic Regression
+
+Logistic regression is a statistical method to model the association between 
+
+
+```{r}
+library(tidyverse)
+```
+
+
+
+```{r}
+Node<-drop_na(read_csv(file = "NODE.CSV"))
+head(Node)
+```
+
+
+```{r}
+pp<-ggplot(data = Node,aes(x=ap,y=ni))+geom_point()
+pp
+```
+
+```{r}
+pp+stat_smooth(method = "glm",method.args=list(family="binomial"),se=F)
+```
+
+
+  
+##Simple Logistic Regression
+
+```{r}
+x.logit<-glm(ni~age,data=Node,family = binomial(link = "logit"))
+summary(x.logit)
+```
+
+###Odds Ratio
+
+```{r}
+exp(cbind(OR=coef(x.logit),confint.default(x.logit,level = .95)))
+```
+
+
+##Multiple Logistic Regression
+
+```{r}
+x.logit.m<-glm(ni~stage+age+ap+grade,data = Node,family = binomial(link = "logit"))
+summary(x.logit.m)
+```
+
+###Odds Ratio
+
+```{r}
+exp(cbind(OR=coef(x.logit.m),confint.default(x.logit.m,level = .95)))
+```
+
+

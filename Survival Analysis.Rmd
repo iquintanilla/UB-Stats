@@ -4,3 +4,83 @@ output: html_notebook
 ---
 
 
+#Survival Analysis
+
+#R Code
+
+##R Packages
+```{r}
+library(tidyverse)
+library(survival)
+library(survminer)
+```
+
+##Dataset
+```{r}
+data("lung")
+lung.cancer<-drop_na(lung)
+```
+
+##Data Prep and Cleaning
+
+```{r}
+lung.cancer$status<-lung.cancer$status-1
+lung.cancer$sex<-ifelse(lung.cancer$sex==1,"M","F")
+head(lung.cancer)
+```
+
+
+##Survival Curves
+
+###Single Survival Curve
+```{r}
+x.surv<-survfit(Surv(time,status)~1,data=lung.cancer,type="kaplan-meier")
+ggsurvplot(x.surv)
+```
+
+###Median Survival Time
+
+```{r}
+quantile(x.surv,probs = .25)
+```
+
+
+###Stratified Survival Curves
+```{r}
+x.surv.m<-survfit(Surv(time,status)~sex,data=lung.cancer,type="kaplan-meier")
+ggsurvplot(x.surv.m,conf.int = T)
+```
+
+###Median Survival
+
+```{r}
+quantile(x.surv.m,probs=0.5)
+```
+
+
+##Cox Proportional Hazard Model
+
+###Single Variable
+
+```{r}
+x.coxph<-coxph(Surv(time,status)~sex,data=lung.cancer)
+summary(x.coxph)
+```
+
+```{r}
+exp(cbind(HR=coef(x.coxph),confint(x.coxph)))
+```
+
+###Multivariable Cox Proportional Hazard Model
+
+```{r}
+x.coxph.m<-coxph(Surv(time,status)~sex+age,data=lung.cancer)
+summary(x.coxph.m)
+```
+
+```{r}
+exp(cbind(HR=coef(x.coxph.m),confint(x.coxph.m)))
+```
+
+
+

@@ -2,3 +2,75 @@
 title: "Linear Regression R Notebook"
 output: html_notebook
 ---
+
+
+#Linear Regression
+
+Linear regression is a regression technique used to model the association between a continuous outcome variable $(Y)$ and a set of explanatory variables $(X_1,X_2,...,X_p)$. One of the main assumptions is that the relationship between the explanatory variables and outcome variable is linear. In mathematical terms:
+\[\tag{1}
+Y=\beta_0+\beta_1X_1+\beta_2X_2+\beta_3X_3+\cdots+\beta_pX_p,
+\]
+
+where $\beta_0,\cdots,\beta_p$ are the slopes that help explain the relationship between the outcome variable and the explanatory variables. A simple linear regression is where we describe the relationship between an outcome variable and one response variable. This is mathematically formulated as
+$$\tag{2}
+Y=\beta_0+\beta_1X_1,
+$$
+where this is very similar to equation of a line:
+$$\tag{3}
+Y=mX+b,
+$$
+where $m=\beta_1$ and $b=\beta_0$. Intuitively, it makes sense to intrepret the simple linear regression model because it explains the relationship between $X$ and $Y$ with the slope. As $X$ increases by 1 unit, Y increases/decreases by m units. The question to ask is how do we interpret the slopes when there are more than one explanatory variables as in equation 1. 
+
+#R Code
+
+To further understand how linear regression works, we will analyze daily air quality measurements in New York City. We want to see if the explanatory variables solar, wind, and temperature have an association between ozone measurements.
+
+#R Packages
+
+```{r}
+library(tidyverse)
+```
+
+
+##Dataset
+
+The first thing to do is load the dataset from R. This dataset is automatically loaded in R, so all we need to do is clean it up a bit. We are removing all the missing values.
+
+```{r}
+AQ<-drop_na(airquality)
+head(AQ)
+```
+
+##Plots
+
+To tell if there is a linear relationship between the outcome variable ozone measurement and one of the explanatory variables.
+```{r}
+pp<-ggplot(data=AQ,aes(x=Solar.R,y=Ozone))+geom_point()
+pp
+```
+
+To help visualize the line **(do not worry about the code)**
+
+```{r}
+pp+geom_smooth(method = "lm")
+```
+
+
+
+##Simple Linear Regression
+
+In R, simple linear regression can be done by using `lm` function in R. The `lm` function needs two arguments: *Y~X* and *data*. *Y~X* tells R what the equation we are going to use and *data* tells R what data we are going to use. To see the results, we use the `summary` function in R which takes the *object* argument.
+
+```{r}
+x.lm<-lm(Ozone~Temp,data = AQ)
+summary(x.lm)
+```
+
+
+##Multiple Linear Regression
+
+```{r}
+x.lm.m<-lm(Ozone~Solar.R+Wind+Temp,data=AQ)
+summary(x.lm.m)
+```
+
