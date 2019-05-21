@@ -1,0 +1,24 @@
+---
+title: "Poisson Regression R Notebook"
+output: html_notebook
+---
+
+#Poisson Regression
+
+
+#R Code
+```{r}
+library(tidyverse)
+```
+
+##Dataset
+```{r}
+data("warpbreaks")
+head(warpbreaks)
+```
+
+##Plots
+```{r}
+ggplot(data=warpbreaks,aes(y=breaks,x=wool))+geom_point()
+```
+
